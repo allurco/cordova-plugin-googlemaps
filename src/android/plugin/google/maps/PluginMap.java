@@ -63,6 +63,9 @@ public class PluginMap extends MyPlugin {
       if (controls.has("myLocationButton")) {
         settings.setMyLocationButtonEnabled(controls.getBoolean("myLocationButton"));
       }
+      if (controls.has("mapTools")) {
+        settings.setMapToolbarEnabled(controls.getBoolean("mapTools"));
+      }
     }
     
     //gestures
