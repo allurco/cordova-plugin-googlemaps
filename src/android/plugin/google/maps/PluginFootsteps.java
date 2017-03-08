@@ -32,7 +32,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class PluginMarker extends MyPlugin {
+public class PluginFootsteps extends MyPlugin {
   
   private enum Animation {
     DROP,
