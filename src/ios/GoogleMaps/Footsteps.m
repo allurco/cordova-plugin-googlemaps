@@ -20,31 +20,31 @@
 -(void)createFootsteps:(CDVInvokedUrlCommand *)command
 {
     NSDictionary *json = [command.arguments objectAtIndex:1];
-    BOOL success = [self attachSteps:json];
+    NSArray * markers = [[self attachSteps:json] copy];
 
-
-    NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
     CDVPluginResult* pluginResult = nil;
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:result];
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:markers];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
--(BOOL)attachSteps:(NSDictionary *) json
+-(NSMutableArray *)attachSteps:(NSDictionary *) json
 {
     NSArray * positions = [json valueForKey:@"positions"];
+    NSMutableArray * markers = [[NSMutableArray alloc] init];
 
     // Create icon
     NSMutableDictionary *iconProperty = nil;
     iconProperty = [json valueForKey:@"icon"];
     NSString * imageName = [self getImageName_:[iconProperty valueForKey:@"url"]];
     UIImage * image = [UIImage imageNamed:imageName];
+    image = [image resize:18 height:37];
 
 
     for(NSDictionary * latLng in positions) {
 
         float latitude = [[latLng valueForKey:@"lat"] floatValue];
         float longitude = [[latLng valueForKey:@"lng"] floatValue];
-        int heading = [[latLng valueForKey:@"rotation"] intValue];
+        double heading = [[latLng valueForKey:@"rotation"] doubleValue];
 
         CLLocationCoordinate2D position = CLLocationCoordinate2DMake(latitude, longitude);
         GMSMarker *marker = [GMSMarker markerWithPosition:position];
@@ -54,10 +54,7 @@
         if ([json valueForKey:@"flat"]) {
             [marker setFlat:[[json valueForKey:@"flat"] boolValue]];
         }
-        if ([json valueForKey:@"rotation"]) {
-            CLLocationDegrees degrees = [[json valueForKey:@"rotation"] doubleValue];
-            [marker setRotation:degrees];
-        }
+
         if ([json valueForKey:@"opacity"]) {
             [marker setOpacity:[[json valueForKey:@"opacity"] floatValue]];
         }
@@ -93,9 +90,11 @@
         if ([[json valueForKey:@"visible"] boolValue] == true) {
             marker.map = self.mapCtrl.map;
         }
+
+        [markers addObject:result];
     }
 
-    return true;
+    return markers;
 }
 
 

@@ -1088,7 +1088,7 @@ App.prototype.addMarker = function(markerOptions, callback) {
 //-------------
 // Marker Footstep
 //-------------
-App.prototype.addFootsteps = function(markerOptions) {
+App.prototype.addFootsteps = function(markerOptions, callback) {
     var self = this;
     markerOptions.animation = markerOptions.animation || undefined;
     markerOptions.positions = markerOptions.positions || [];
@@ -1100,12 +1100,23 @@ App.prototype.addFootsteps = function(markerOptions) {
 
 
     cordova.exec(function(result) {
-        //markerOptions.hashCode = result.hashCode;
-        //var markers = new Footsteps(self, markerOptions);
 
-        //MARKERS[result.id] = marker;
-        //OVERLAYS[result.id] = marker;
+        var steps = [];
 
+        for(var i=0;i<result.length; i++) {
+
+            markerOptions.hashCode = result[i].hashCode;
+            var marker = new Footstep(self, result[i].id, markerOptions);
+            steps.push(marker);
+
+            MARKERS[result[i].id] = marker;
+            OVERLAYS[result[i].id] = marker;
+
+        }
+
+        if (typeof callback === "function") {
+            callback.call(self, steps, self);
+        }
 
     }, self.errorHandler, PLUGIN_NAME, 'exec', ['Footsteps.createFootsteps', self.deleteFromObject(markerOptions,'function')]);
 };
@@ -1565,9 +1576,9 @@ Marker.prototype.setPosition = function(position) {
 
 
 /*****************************************************************************
- * Footsteps Class
+ * Footstep Class
  *****************************************************************************/
-var Footsteps = function(map, id, markerOptions) {
+var Footstep = function(map, id, markerOptions) {
     BaseClass.apply(this);
 
     var self = this;
@@ -1589,23 +1600,23 @@ var Footsteps = function(map, id, markerOptions) {
         }
     }
 };
-Footsteps.prototype = new BaseClass();
+Footstep.prototype = new BaseClass();
 
-Footsteps.prototype.isVisible = function() {
+Footstep.prototype.isVisible = function() {
     return this.get('visible');
 };
 
-Footsteps.prototype.getId = function() {
+Footstep.prototype.getId = function() {
     return this.id;
 };
-Footsteps.prototype.getMap = function() {
+Footstep.prototype.getMap = function() {
     return this.map;
 };
-Footsteps.prototype.getHashCode = function() {
+Footstep.prototype.getHashCode = function() {
     return this.hashCode;
 };
 
-Footsteps.prototype.remove = function(callback) {
+Footstep.prototype.remove = function(callback) {
     var self = this;
     self.set("keepWatching", false);
     delete MARKERS[this.id];
@@ -1613,42 +1624,42 @@ Footsteps.prototype.remove = function(callback) {
         if (typeof callback === "function") {
             callback.call(self);
         }
-    }, this.errorHandler, PLUGIN_NAME, 'exec', ['Marker.remove', this.getId()]);
+    }, this.errorHandler, PLUGIN_NAME, 'exec', ['Footsteps.remove', this.getId()]);
     this.off();
 };
 
-Footsteps.prototype.setOpacity = function(opacity) {
+Footstep.prototype.setOpacity = function(opacity) {
     if (!opacity && opacity !== 0) {
         console.log('opacity value must be int or double');
         return false;
     }
     this.set('opacity', opacity);
-    cordova.exec(null, this.errorHandler, PLUGIN_NAME, 'exec', ['Marker.setOpacity', this.getId(), opacity]);
+    cordova.exec(null, this.errorHandler, PLUGIN_NAME, 'exec', ['Footsteps.setOpacity', this.getId(), opacity]);
 };
-Footsteps.prototype.setZIndex = function(zIndex) {
+Footstep.prototype.setZIndex = function(zIndex) {
     if (typeof zIndex === 'undefined') {
         return false;
     }
     this.set('zIndex', zIndex);
-    cordova.exec(null, this.errorHandler, PLUGIN_NAME, 'exec', ['Marker.setZIndex', this.getId(), zIndex]);
+    cordova.exec(null, this.errorHandler, PLUGIN_NAME, 'exec', ['Footsteps.setZIndex', this.getId(), zIndex]);
 };
-Footsteps.prototype.getOpacity = function() {
+Footstep.prototype.getOpacity = function() {
     return this.get('opacity');
 };
 
-Footsteps.prototype.setFlat = function(flat) {
+Footstep.prototype.setFlat = function(flat) {
     flat = parseBoolean(flat);
     this.set('flat', flat);
-    cordova.exec(null, this.errorHandler, PLUGIN_NAME, 'exec', ['Marker.setFlat', this.getId(), flat]);
+    cordova.exec(null, this.errorHandler, PLUGIN_NAME, 'exec', ['Footsteps.setFlat', this.getId(), flat]);
 };
 
-Footsteps.prototype.setVisible = function(visible) {
+Footstep.prototype.setVisible = function(visible) {
     visible = parseBoolean(visible);
     this.set('visible', visible);
-    cordova.exec(null, this.errorHandler, PLUGIN_NAME, 'exec', ['Marker.setVisible', this.getId(), visible]);
+    cordova.exec(null, this.errorHandler, PLUGIN_NAME, 'exec', ['Footsteps.setVisible', this.getId(), visible]);
 };
 
-Footsteps.prototype.isVisible = function() {
+Footstep.prototype.isVisible = function() {
     return this.get("visible");
 };
 
