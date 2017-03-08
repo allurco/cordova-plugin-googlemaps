@@ -113,10 +113,10 @@ public class PluginFootsteps extends MyPlugin {
 
     // Load icon
     if (opts.has("icon")) {
-      Bundle bundle = null;
-      Object value = opts.get("icon");
-      bundle = new Bundle();
-      bundle.putString("url", (String)value.get('url'));
+        Bundle bundle = null;
+        JSONObject value = opts.getJSONObject("icon");
+        bundle = new Bundle();
+        bundle.putString("url", value.getString("url"));
 
       this.setIcon_(markers, bundle, new PluginAsyncInterface() {
 
