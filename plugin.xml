@@ -138,6 +138,9 @@
             <feature name="Marker">
                 <param name="ios-package" value="Marker" />
             </feature>
+            <feature name="Footsteps">
+                <param name="ios-package" value="Footsteps" />
+            </feature>
             <feature name="Polygon">
                 <param name="ios-package" value="Polygon" />
             </feature>
@@ -167,6 +170,8 @@
         <source-file src="src/ios/GoogleMaps/Map.m" />
         <header-file src="src/ios/GoogleMaps/Marker.h" />
         <source-file src="src/ios/GoogleMaps/Marker.m" />
+        <header-file src="src/ios/GoogleMaps/Footsteps.h" />
+        <source-file src="src/ios/GoogleMaps/Footsteps.m" />
         <header-file src="src/ios/GoogleMaps/MyPlgunProtocol.h" />
         <header-file src="src/ios/GoogleMaps/PluginUtil.h" />
         <source-file src="src/ios/GoogleMaps/PluginUtil.m" />
