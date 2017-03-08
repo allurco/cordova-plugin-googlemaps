@@ -1088,7 +1088,7 @@ App.prototype.addMarker = function(markerOptions, callback) {
 //-------------
 // Marker Footstep
 //-------------
-App.prototype.addFootsteps = function(markerOptions, callback) {
+App.prototype.addFootsteps = function(markerOptions) {
     var self = this;
     markerOptions.animation = markerOptions.animation || undefined;
     markerOptions.positions = markerOptions.positions || [];
@@ -1101,14 +1101,12 @@ App.prototype.addFootsteps = function(markerOptions, callback) {
 
     cordova.exec(function(result) {
         //markerOptions.hashCode = result.hashCode;
-        var markers = new Footsteps(self, markerOptions);
+        //var markers = new Footsteps(self, markerOptions);
 
         //MARKERS[result.id] = marker;
         //OVERLAYS[result.id] = marker;
 
-        if (typeof callback === "function") {
-            callback.call(self, marker, self);
-        }
+
     }, self.errorHandler, PLUGIN_NAME, 'exec', ['Footsteps.createFootsteps', self.deleteFromObject(markerOptions,'function')]);
 };
 

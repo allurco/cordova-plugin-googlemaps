@@ -32,14 +32,24 @@
 -(BOOL)attachSteps:(NSDictionary *) json
 {
     NSArray * positions = [json valueForKey:@"positions"];
-    UIImage * image;
+
+    // Create icon
+    NSMutableDictionary *iconProperty = nil;
+    iconProperty = [json valueForKey:@"icon"];
+    NSString * imageName = [self getImageName_:[iconProperty valueForKey:@"url"]];
+    UIImage * image = [UIImage imageNamed:imageName];
+
 
     for(NSDictionary * latLng in positions) {
 
         float latitude = [[latLng valueForKey:@"lat"] floatValue];
         float longitude = [[latLng valueForKey:@"lng"] floatValue];
+        int heading = [[latLng valueForKey:@"rotation"] intValue];
+
         CLLocationCoordinate2D position = CLLocationCoordinate2DMake(latitude, longitude);
         GMSMarker *marker = [GMSMarker markerWithPosition:position];
+
+        [marker setRotation:heading];
 
         if ([json valueForKey:@"flat"]) {
             [marker setFlat:[[json valueForKey:@"flat"] boolValue]];
@@ -64,12 +74,7 @@
 
         [self.mapCtrl.overlayManager setObject:properties forKey: markerPropertyId];
 
-
-        // Create icon
-        NSMutableDictionary *iconProperty = nil;
-        iconProperty = [json valueForKey:@"icon"];
-        NSString * imageName = [self getImageName_:[iconProperty valueForKey:@"url"]];
-        image = [UIImage imageNamed:imageName];
+        marker.icon = image;
 
 
         // Visible property
