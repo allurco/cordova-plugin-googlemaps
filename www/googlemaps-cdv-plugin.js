@@ -1082,7 +1082,7 @@ App.prototype.addMarker = function(markerOptions, callback) {
         if (typeof callback === "function") {
             callback.call(self, marker, self);
         }
-    }, self.errorHandler, PLUGIN_NAME, 'exec', ['Footsteps.createFootsteps', self.deleteFromObject(markerOptions,'function')]);
+    }, self.errorHandler, PLUGIN_NAME, 'exec', ['Marker.createMarker', self.deleteFromObject(markerOptions,'function')]);
 };
 
 //-------------
@@ -1100,22 +1100,16 @@ App.prototype.addFootsteps = function(markerOptions, callback) {
 
 
     cordova.exec(function(result) {
-        markerOptions.hashCode = result.hashCode;
-        var markers = new Marker(self, result.id, markerOptions);
+        //markerOptions.hashCode = result.hashCode;
+        var markers = new Footsteps(self, markerOptions);
 
-        MARKERS[result.id] = marker;
-        OVERLAYS[result.id] = marker;
+        //MARKERS[result.id] = marker;
+        //OVERLAYS[result.id] = marker;
 
-        if (typeof markerClick === "function") {
-            marker.on(plugin.google.maps.event.MARKER_CLICK, markerClick);
-        }
-        if (typeof infoClick === "function") {
-            marker.on(plugin.google.maps.event.INFO_CLICK, infoClick);
-        }
         if (typeof callback === "function") {
             callback.call(self, marker, self);
         }
-    }, self.errorHandler, PLUGIN_NAME, 'exec', ['Marker.createMarker', self.deleteFromObject(markerOptions,'function')]);
+    }, self.errorHandler, PLUGIN_NAME, 'exec', ['Footsteps.createFootsteps', self.deleteFromObject(markerOptions,'function')]);
 };
 
 
@@ -1584,16 +1578,9 @@ var Footsteps = function(map, id, markerOptions) {
         value: map,
         writable: false
     });
-    Object.defineProperty(self, "hashCode", {
-        value: markerOptions.hashCode,
-        writable: false
-    });
-    Object.defineProperty(self, "id", {
-        value: id,
-        writable: false
-    });
+
     Object.defineProperty(self, "type", {
-        value: "Marker",
+        value: "Footsteps",
         writable: false
     });
 
@@ -1609,8 +1596,6 @@ Footsteps.prototype = new BaseClass();
 Footsteps.prototype.isVisible = function() {
     return this.get('visible');
 };
-
-
 
 Footsteps.prototype.getId = function() {
     return this.id;
