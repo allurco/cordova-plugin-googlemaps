@@ -1588,6 +1588,16 @@ var Footstep = function(map, id, markerOptions) {
         writable: false
     });
 
+    Object.defineProperty(self, "hashCode", {
+        value: markerOptions.hashCode,
+        writable: false
+    });
+
+    Object.defineProperty(self, "id", {
+        value: id,
+        writable: false
+    });
+
     Object.defineProperty(self, "type", {
         value: "Footsteps",
         writable: false

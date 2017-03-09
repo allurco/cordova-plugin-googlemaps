@@ -118,19 +118,23 @@ public class PluginFootsteps extends MyPlugin {
         bundle = new Bundle();
         bundle.putString("url", value.getString("url"));
 
-      this.setIcon_(markers, bundle, new PluginAsyncInterface() {
+      this.setIcon_(markers, bundle, new PluginFootstepsAsyncInterface() {
 
         @Override
-        public void onPostExecute(Object object) {
-          Marker marker = (Marker)object;
-          if (opts.has("visible")) {
-            try {
-              marker.setVisible(opts.getBoolean("visible"));
-            } catch (Exception e) {
-              e.printStackTrace();
+        public void onPostExecute(List<Marker> markers) {
+
+          for (int i=0;i < markers.size();i++) {
+            Marker marker = (Marker) markers.get(i);
+            if (opts.has("visible")) {
+              try {
+                marker.setVisible(opts.getBoolean("visible"));
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
+            } else {
+              marker.setVisible(true);
             }
-          } else {
-            marker.setVisible(true);
+
           }
 
           // Animation
@@ -276,7 +280,7 @@ public class PluginFootsteps extends MyPlugin {
   }
 
 
-  private void setIcon_(final List<Marker> markers, final Bundle iconProperty, final PluginAsyncInterface callback) {
+  private void setIcon_(final List<Marker> markers, final Bundle iconProperty, final PluginFootstepsAsyncInterface callback) {
 
     String iconUrl = iconProperty.getString("url");
     if (iconUrl.indexOf("://") == -1 &&
@@ -351,7 +355,6 @@ public class PluginFootsteps extends MyPlugin {
 
           int width = 18;
           int height = 37;
-          image = PluginUtil.resizeBitmap(image, width, height);
           image = PluginUtil.scaleBitmapForDevice(image);
 
 
